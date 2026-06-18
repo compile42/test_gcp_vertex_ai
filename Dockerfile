@@ -3,7 +3,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Installation des dépendances globales du projet
-COPY src/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copie de tous tes scripts (ingest_data.py, train_model.py, etc.)
