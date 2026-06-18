@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Terraform (Bloque tout en profondeur)
+**/.terraform/
+**/.terraform*
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+
+# Jupyter checkpoints
+**/.ipynb_checkpoints/
+
+# Clés et secrets
+*.json
+*.joblib
+*.pkl

@@ -1,0 +1,39 @@
+name: MLOps Vertex AI Industrial Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  mlops-ci-cd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for GCP
+        run: gcloud auth configure-docker europe-west1-docker.pkg.dev --quiet
+
+      - name: Build and Push Project Image
+        run: |
+          docker build -t europe-west1-docker.pkg.dev/project-440bdad3-9821-4677-939/ml-pipelines-repo/churn-project:latest .
+          docker push europe-west1-docker.pkg.dev/project-440bdad3-9821-4677-939/ml-pipelines-repo/churn-project:latest
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install Pipeline Dependencies
+        run: pip install kfp google-cloud-aiplatform
+
+      - name: Compile and Submit Pipeline to Vertex AI
+        run: python src/pipeline.py
